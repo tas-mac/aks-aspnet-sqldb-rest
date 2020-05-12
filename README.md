@@ -113,15 +113,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
 
     Click on **OK**.
 
-    In the **Basics** tab, click on **Configure database** and select the **Basic** SKU.  See screenshots below.
-
-    ![alt tag](./images/A-08.PNG)
-
-    ![alt tag](./images/A-09.PNG)
-
-    ![alt tag](./images/A-10.PNG)
-
-    Click **Apply**.
+    Click **Next**.
 
     Click on **Next : Networking >** at the bottom of the web page.  In the **Networking** tab, select *Public endpoint* for **Connectivity method**.  Also, enable the button besides **Allow Azure services and resources to access this server**.  Next, click on **Review + create**.  See screenshot below.
 
@@ -131,7 +123,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
 
     ![alt tag](./images/A-11.PNG)
 
-    Click **Create**.  It will take approx. 10 minutes for the SQL Server instance and database to get created.
+    Click **Review + Create**.  It will take approx. 10 minutes for the SQL Server instance and database to get created.
 
 4.  Configure a firewall for Azure SQL Server.
 
