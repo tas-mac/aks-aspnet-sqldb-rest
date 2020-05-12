@@ -163,7 +163,7 @@ The following tools (binaries) will be installed on the Linux VM (~ Bastion Host
 
 Follow the steps below to create the Bastion host (Linux VM) and install pre-requisite software on this VM.
 
-1.  Fork this [GitHub repository](https://github.com/ganrad/aks-aspnet-sqldb-rest) to **your** GitHub account.
+1.  Fork this [GitHub repository](https://github.com/tas-mac/aks-aspnet-sqldb-rest) to **your** GitHub account.
 
     In the browser window, click on **Fork** in the upper right hand corner to get a separate copy of this project added to your GitHub account.  You must be signed in to your GitHub account in order to fork this repository.
 
