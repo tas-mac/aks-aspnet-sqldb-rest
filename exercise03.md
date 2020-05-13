@@ -1,5 +1,5 @@
 ### Deploy Azure Container Registry
-**Approx. time to complete this section: 10 minutes**
+**Approx. time to complete this section: 30 minutes**
 
 In this step, we will deploy an instance of Azure Container Registry (ACR) to store container images which we will build in later steps.  A container registry such as ACR allows us to store multiple versions of application container images in one centralized repository and consume them from multiple nodes (VMs/Servers) where our applications are deployed.
 
@@ -13,3 +13,21 @@ In this step, we will deploy an instance of Azure Container Registry (ACR) to st
     - Keep in mind, you will need an **Premium** SKU ACR instance in order to work on *Exercise 4*.  Hence select the **Premium** SKU if you intend to work on this challenge later.
 
     ![alt tag](./images/E-02.PNG)
+3. Log into ECR repo from your machine 
+    ```bash
+    az acr login --name <registry name>
+    ```
+4. Tag your docker images to latest 
+    ```bash
+    * docker tag claims-api <registry name>.azurecr.io/claims-api:latest
+    ```    
+5. Tag your docker images to latest 
+    ```bash
+    * docker push <registry name>.azurecr.io/claims-api:latest
+    ```        
+6. Validate that you can pull image from the repo    
+    ```bash
+    * docker pull laims-api:latest
+    ```     
+   
+*** Done ****
