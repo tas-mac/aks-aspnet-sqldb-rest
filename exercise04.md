@@ -57,10 +57,11 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
        $ az aks show -g myResourceGroup -n akscluster --output table
        ```
 4. Log into Azure portal to verify that cluster was indeed created
-5. Using the dashboard follow the command to install the dashboard. You can also navigate to it from the cluster's main page as shown below
-       ```bash
-       
+5. Using the dashboard follow the command to install the dashboard. You can also navigate to it from the cluster's main page as shown below  
+![alt tag](./images/aks-dashboard.png)
+    ```bash
          az aks install-cli
          az aks get-credentials --resource-group myresourcegroup-xxxxxx --name akscluster
-         az aks browse --resource-group myresourcegroup-xxxxxx --name akscluster
-      ```         
+         az aks browse --resource-group myresourcegroup-xxxxxx --name akscluster    
+     ```        
+
