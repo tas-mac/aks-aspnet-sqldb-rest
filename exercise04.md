@@ -11,6 +11,7 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
 1.  Ensure the *Resource provider* for AKS service is enabled (registered) for your subscription.
 
     A quick and easy way to verify this is, use the Azure portal and go to *->Azure Portal->Subscriptions->Your Subscription->Resource providers->Microsoft.ContainerService->(Ensure registered)*.  Alternatively, you can use Azure CLI to register all required service providers.  See below.
+    
     ```bash
     $ az provider register -n Microsoft.Network
     $ az provider register -n Microsoft.Storage
@@ -66,6 +67,61 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
      ```        
 
 **** Pause  *****
-#### Deploying a docker from public repository into the cluster
-1. Navigate to your kubernetes dashboard
-2. 
+#### Installing Helm on your machine 
+Helm (https://helm.sh/docs/intro/install/) is a the deployment tool of choice for Kubernetes deployment. 
+1. For windows users you can install Helm using Chocolatey package manager
+    ```bash
+       choco install kubernetes-helm
+      ```         
+2. Connect to the AKS cluster and initialize Helm package manager.
+    ```bash
+    # Configure kubectl to connect to the AKS cluster
+    $ az aks get-credentials --resource-group myresourcegroup-xxxxxx --name akscluster
+    #
+    # Check cluster nodes
+    $ kubectl get nodes -o wide
+    #
+    # Check default namespaces in the cluster
+    $ kubectl get namespaces
+    #
+    # Check if Helm client is able to connect to Tiller on AKS.
+    # This command should list both client and server versions.
+    $ helm version
+    Client: &version.Version{SemVer:"v2.16.3", GitCommit:"e13bc94621d4ef666270cfbe734aaabf342a49bb", GitTreeState:"clean"}
+    ```       
+ 3. Use Helm to deploy the Claims API microservice container on AKS.
+
+A kubernetes Namespace is a container object used to group applications and their associated resources. We will be deploying the Claims API microservice container within the development namespace.Refer to the commands below.
+
+    ```bash
+    # Make sure you are in the *aks-aspnet-sqldb-rest* directory.
+    $ cd ~/git-repos/aks-aspnet-sqldb-rest
+    #
+    # Use Helm to deploy the Claims API microservice on AKS.  Make sure to specify -
+    #   - Name of ACR repository in parameter 'image.repository'.  Substitute the correct value for the name of your 
+    #     ACR.
+    #     eg., --set image.repository=<your-acr-repo>.azurecr.io/claims-api
+    #
+    #   - Azure SQL Server DB Connection string in parameter 'sqldb.connectionString'.  Remember to
+    # substitute the correct values for SQL_SRV_PREFIX, SQL_USER_ID & SQL_USER_PWD.
+    #
+    #     eg., --set sqldb.connectionString="Server=tcp:#{SQL_SRV_PREFIX}#.database.windows.net;Initial Catalog=ClaimsDB;Persist Security Info=False;User ID=#{SQL_USER_ID}#;Password=#{SQL_USER_PWD}#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    #
+    #   - Enable/Set deployment type to 'blue'
+    #     eg., --set blue.enabled=true
+    # 
+    $ helm upgrade aks-aspnetcore-lab ./claims-api --install --namespace development --set blue.enabled=true --set image.repository=<your-acr-repo>.azurecr.io/claims-api --set sqldb.connectionString="Server=tcp:#{SQL_SRV_PREFIX}#.database.windows.net;Initial Catalog=ClaimsDB;Persist Security Info=False;User ID=#{SQL_USER_ID}#;Password=#{SQL_USER_PWD}#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    #
+    # List the Kubernetes namespaces.  Verify that the 'development' namespace got created.
+    $ kubectl get namespaces
+    #
+    # List the application releases
+    $ helm ls
+    #
+    # List the pods in the 'development' namespace
+    $ kubectl get pods -n development
+    #
+    # Check the deployed Kubernetes service
+    $ kubectl get svc -n development
+    #
+    ```
