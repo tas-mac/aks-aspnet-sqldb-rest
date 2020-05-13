@@ -144,21 +144,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
 
     ![alt tag](./images/B-01.PNG)
 
-
-
 7.  Install Azure CLI and login into your Azure account.
-    ```bash
-    # Install Azure CLI on this VM.
-    #
-    # Import the Microsoft repository key.
-    $ sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
-    #
-    # Create the local azure-cli repository information.
-    $ sudo sh -c 'echo -e "[azure-cli]\nname=Azure CLI\nbaseurl=https://packages.microsoft.com/yumrepos/azure-cli\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/azure-cli.repo'
-    #
-    # Install with the yum install command.
-    $ sudo yum install -y azure-cli
-    #
     # Check the Azure CLI version (Should be 2.0.54+)
     $ az -v
     #
@@ -167,41 +153,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
     #
     ```
 
-8.  Install Kubernetes CLI, Helm CLI, Istio CLI and .NET Core SDK on this VM.
-    ```bash
-    # Make sure you are in the home directory
-    $ cd
-    #
-    # Install Helm v2.16.3
-    # Create a new directory 'Helm' under home directory to store the helm binary
-    $ mkdir helm
-    $ cd helm
-    $ wget https://get.helm.sh/helm-v2.16.3-linux-amd64.tar.gz
-    $ tar -xzvf helm-v2.16.3-linux-amd64.tar.gz
-    #
-    # Switch back to home directory
-    $ cd
-    #
-    # Install Kubernetes CLI
-    # Create a new directory 'aztools' under home directory to store the kubectl binary
-    $ mkdir aztools
-    #
-    # Install kubectl binary in the new directory
-    $ az aks install-cli --install-location=./aztools/kubectl
-    #
-    # Install Istio Service Mesh CLI v1.4.5
-    $ ISTIO_VERSION=1.4.5
-    $ curl -sL "https://github.com/istio/istio/releases/download/$ISTIO_VERSION/istio-$ISTIO_VERSION-linux.tar.gz" | tar xz --directory=$HOME/aztools
-    # 
-    # Register the Microsoft key, product repository and required dependencies.
-    $ sudo rpm -Uvh https://packages.microsoft.com/config/centos/7/packages-microsoft-prod.rpm
-    #
-    # Update the system libraries.  This command will take a few minutes (~10 mins) to complete.  Be patient!
-    $ sudo yum update
-    #
-    # Install .NET Core 3.0 binaries
-    $ sudo yum install -y dotnet-sdk-3.0
-    #
+8.  Install Kubernetes CLI, Helm CLI, Istio CLI and .NET Core SDK on your VM.
     # Check .NET Core version (Should print 3.0.100)
     $ dotnet --version
     #
@@ -209,52 +161,8 @@ In this section, we will create an Azure SQL Server instance and create a databa
     # This command installs dotnet-ef in ~/.dotnet/tools directory. so this directory has to be in
     # the Path !!
     $ dotnet tool install --global dotnet-ef --version 3.0
-    #
-    # Finally, update '.bashrc' file and set the path to jq, Helm and Kubectl binaries
-    $ JQ=/home/labuser/jq
-    $ KUBECLI=/home/labuser/aztools
-    $ HELM=/home/labuser/helm/linux-amd64
-    $ ISTIO=/home/labuser/aztools/istio-$ISTIO_VERSION/bin
-    $ DOTNET_TOOLS=$HOME/.dotnet/tools
-    $ echo "export PATH=$JQ:$KUBECLI:$HELM:$ISTIO:${DOTNET_TOOLS}:${PATH}" >> ~/.bashrc
-    #
     ```
-
-9.  (Optional) Install Kubernetes utilities.
-
-    Install [power tools](https://github.com/ahmetb/kubectx) for `kubectl`.
-    ```bash
-    #
-    # Install 'kubectx' and 'kubens' in ~/aztools/kubectx
-    $ git clone https://github.com/ahmetb/kubectx $HOME/aztools/kubectx
-    # Create sym links to the power tools - kubectx and kubens
-    $ sudo ln -s $HOME/aztools/kubectx/kubectx /usr/local/bin/kubectx
-    $ sudo ln -s $HOME/aztools/kubectx/kubens /usr/local/bin/kubens
-    #
-    ```
-
-10. Install **docker-ce** container runtime.
-
-    Refer to the commands below.  You can also refer to the [Docker CE install docs for CentOS](https://docs.docker.com/install/linux/docker-ce/centos/).
-
-    ```bash
-    #
-    $ sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-    $ sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-    $ sudo yum install -y docker-ce docker-ce-cli containerd.io
-    $ sudo systemctl enable docker
-    $ sudo groupadd docker
-    $ sudo usermod -aG docker labuser
-    #
-    ```
-
-    LOGOUT AND RESTART YOUR LINUX VM BEFORE PROCEEDING.  You can restart the VM via Azure Portal.  Alternatively, use the command below to reboot the VM.
-    ```bash
-    $ sudo shutdown -r now
-    #
-    ```
-
-    Once the Linux VM is back up, log back in to the VM via SSH.  Run the command below to verify **docker** engine is running.
+9.    Run the command below to verify **docker** engine is running.
     ```bash
     $ docker info
     ```
