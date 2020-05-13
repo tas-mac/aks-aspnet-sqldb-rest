@@ -65,3 +65,7 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
          az aks browse --resource-group myresourcegroup-xxxxxx --name akscluster    
      ```        
 
+**** Pause  *****
+#### Deploying a docker from public repository into the cluster
+1. Navigate to your kubernetes dashboard
+2. 
