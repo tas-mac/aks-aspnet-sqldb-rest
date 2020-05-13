@@ -41,8 +41,26 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
        # Subscription Id: xxxxxx-xxx-xxxx-xxxx-xxxxxxxx
        # Tenant Id: cxxxxxx-xxx-xxxx-xxxx-xxxxxxxx
        # Tenant Domain Name: msazurelabs.onmicrosoft.com
-       $ az aks create --resource-group myresourcegroup-xxxxxx --name akscluster --location westus2 --node-count 2 --dns-name-prefix akslab --generate-ssh-keys --disable-rbac --kubernetes-version "1.15.10" --service-principal {Application/Client Id} --client-secret {Application Secret Key} --attach-acr {repo name}.azurecr.io
+       $ az aks create --resource-group myresourcegroup-xxxxxx \
+                --name akscluster 
+                --location westus2 
+                --node-count 2 
+                --dns-name-prefix akslab 
+                --generate-ssh-keys 
+                --disable-rbac 
+                --kubernetes-version "1.15.10" 
+                --service-principal {Application/Client Id} 
+                --client-secret {Application Secret Key} 
+                --attach-acr {repo name}.azurecr.io
        #
        # Verify status of AKS cluster
        $ az aks show -g myResourceGroup -n akscluster --output table
        ```
+4. Log into Azure portal to verify that cluster was indeed created
+5. Using the dashboard follow the command to install the dashboard. You can also navigate to it from the cluster's main page as shown below
+       ```bash
+       
+         az aks install-cli
+         az aks get-credentials --resource-group myresourcegroup-xxxxxx --name akscluster
+         az aks browse --resource-group myresourcegroup-xxxxxx --name akscluster
+      ```         
