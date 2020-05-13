@@ -52,7 +52,7 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
                 --kubernetes-version "1.15.10" 
                 --service-principal {Application/Client Id} 
                 --client-secret {Application Secret Key} 
-                --attach-acr {repo name}.azurecr.io
+                --attach-acr {repo name}
        #
        # Verify status of AKS cluster
        $ az aks show -g myresourcegroup-xxxxxx -n akscluster --output table
