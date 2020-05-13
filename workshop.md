@@ -153,7 +153,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
     #
     ```
 
-8.  Install Kubernetes CLI, Helm CLI, Istio CLI and .NET Core SDK on your VM.
+8.  Install .netCore 3.0 on your machine.
     # Check .NET Core version (Should print 3.0.100)
     $ dotnet --version
     #
@@ -256,12 +256,6 @@ Before proceeding, login into the Linux VM using SSH.
 
 5.  Build and run the Claims API with Docker for Linux containers.
 
-    In the SSH terminal window where you started the application (dotnet run), press Control-C to exit the program and return to the terminal prompt (`$`).  Then execute the instructions (see below) in this terminal window.
-    ```bash
-    # Make sure you are in the Claims API source code directory.  If not switch ($ cd ...).
-    $ pwd
-    /home/labuser/git-repos/aks-aspnet-sqldb-rest
-    #
     # Run the docker build.
     # The build will take a few minutes to download both the .NET core build and run-time 
     # containers!
@@ -288,7 +282,7 @@ Before proceeding, login into the Linux VM using SSH.
     $ docker rmi $(docker images -f dangling=true -q)
     #
     # Run the application container
-    $ docker run -it --rm -p 5000:80 --name test-claims-api claims-api
+    $ docker run -it --rm -p 80:80 --name test-claims-api claims-api
     #
     # When you are done testing:
     #   Press 'Control + C' to exit the program and return to the terminal prompt ($)
