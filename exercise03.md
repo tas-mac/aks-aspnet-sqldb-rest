@@ -13,21 +13,23 @@ In this step, we will deploy an instance of Azure Container Registry (ACR) to st
     - Keep in mind, you will need an **Premium** SKU ACR instance in order to work on *Exercise 4*.  Hence select the **Premium** SKU if you intend to work on this challenge later.
 
     ![alt tag](./images/E-02.PNG)
-3. Log into ECR repo from your machine 
+3. Enable login access via access keys 
+ ![alt tag](./images/enable-ecr-access.png)
+ Log into ECR repo from your machine 
     ```bash
     az acr login --name <registry name>
     ```
 4. Tag your docker images to latest 
     ```bash
-    * docker tag claims-api <registry name>.azurecr.io/claims-api:latest
+    docker tag claims-api <registry name>.azurecr.io/claims-api:latest
     ```    
 5. Tag your docker images to latest 
     ```bash
-    * docker push <registry name>.azurecr.io/claims-api:latest
+    docker push <registry name>.azurecr.io/claims-api:latest
     ```        
 6. Validate that you can pull image from the repo    
     ```bash
-    * docker pull laims-api:latest
+    docker pull laims-api:latest
     ```     
    
 *** Done ****
