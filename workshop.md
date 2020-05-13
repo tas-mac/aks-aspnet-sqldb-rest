@@ -6,22 +6,13 @@ Table of Contents
 
 <!--ts-->
   * [A. Deploy an Azure SQL Server Database](#a-deploy-an-azure-sql-server-and-database)
-  * [B. Provision a Linux VM (Bastion Host/Jump Box) on Azure and install pre-requisite software](#b-provision-a-linux-centos-vm-on-azure)
-  * [C. Build and run the Claims API microservice locally on the Bastion Host](#c-build-and-run-the-claims-api-microservice-locally-on-the-linux-vm)
-  * [D. Deploy an Azure DevOps Services build agent on the Bastion Host](#d-deploy-the-azure-devops-services-build-agent)
+  * [C. Build and run the Claims API microservice locally  Host](#c-build-and-run-the-claims-api-microservice-locally-on-the-linux-vm)
   * [E. Deploy an Azure Container Registry (ACR)](#e-deploy-azure-container-registry)
   * [F. Define and execute a Build Pipeline in Azure DevOps Services](#f-define-and-execute-claims-api-build-pipeline-in-azure-devops-services)
   * [G. Deploy an Azure Kubernetes Service (AKS) cluster](#g-create-an-azure-kubernetes-service-cluster-and-deploy-claims-api-microservice)
     * [Invoking the Claims API Microservice REST API](#invoking-the-claims-api-microservice-rest-api)
-  * [H. Define and execute a Release Pipeline in Azure DevOps Services](#h-define-and-execute-claims-api-release-pipeline-in-azure-devops-services)
-    * [Exercise 1: Execute functional tests in QA region and then deploy Claims API microservice in Production region](#exercise-1)
-    * [Exercise 2: Implement Blue-Green deployments in Production region](#exercise-2)
-  * [I. Deploy a Delivery Pipeline in Azure DevOps Services](#i-define-and-execute-claims-api-delivery-pipeline-in-azure-devops-services)
-    * [Exercise 3: Scan container images and digitally sign them using Docker Content Trust](#exercise-3)
-  * [J. Explore out of box AKS features](#j-explore-out-of-box-aks-features)
-<!--te-->
 
-This project provides step by step instructions to use **Azure DevOps Services** to build the application binaries, package the binaries within a container and deploy the container on **Azure Kubernetes Service** (AKS). The deployed microservice exposes a Web API (REST interface) and supports all CRUD operations for accessing (retrieving / storing) medical claims records from a relational data store.  The microservice persists all claims records in an Azure SQL Server Database.
+This project provides step by step instructions to build the application binaries, package the binaries within a container and deploy the container on **Azure Kubernetes Service** (AKS). The deployed microservice exposes a Web API (REST interface) and supports all CRUD operations for accessing (retrieving / storing) medical claims records from a relational data store.  The microservice persists all claims records in an Azure SQL Server Database.
 
 **Prerequisites:**
 1.  Review and complete all modules in [Azure Fundamentals](https://docs.microsoft.com/en-us/learn/paths/azure-fundamentals/) course.
@@ -31,8 +22,6 @@ This project provides step by step instructions to use **Azure DevOps Services**
     - In order to complete all sections in this project, at least one person in your team **must** have **Owner** *Role* permission for the Azure Subscription.
     - For an Azure Subscription, there is a default limit on the number of **VM Cores** which can be provisioned per region.  The Azure limits are also referred to as quotas.  The VM Cores have both a regional total limit (~ 20) and a per-size series limit.  In case a single Azure Subscription is used for provisioning resources (~ VM's) by all attendees, the default VM Cores limit might get exceeded. The default quota can be increased by opening an online Azure Customer Support request.  More details can be found [here](https://docs.microsoft.com/en-us/azure/azure-resource-manager/management/azure-subscription-service-limits).
 3.  An Azure **Resource Group** with **Owner** *Role* permission.  All Azure resources will be deloyed into this resource group.
-4.  A **GitHub** Account to fork and clone this GitHub repository.
-5.  A **Azure DevOps Services** (formerly Visual Studio Team Services) Account.  You can get a free Azure DevOps account by accessing the [Azure DevOps Services](https://azure.microsoft.com/en-us/services/devops/) web page.
 6.  Review [Overview of Azure Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview).  **Azure Cloud Shell** is an interactive, browser accessible shell for managing Azure resources.  You will be using the Cloud Shell to create the Bastion Host (Linux VM).
 7.  This project assumes readers/attendees are familiar with Linux fundamentals, Git SCM, Linux Containers (*docker engine*), Kubernetes, DevOps (*Continuous Integration/Continuous Deployment*) concepts and developing Microservices in one or more programming languages.  If you are new to any of these technologies, go thru the resources below.
     - [Learn Linux, 101: A roadmap for LPIC-1](https://developer.ibm.com/tutorials/l-lpic1-map/)
@@ -147,21 +136,7 @@ In this section, we will create an Azure SQL Server instance and create a databa
 
     Copy the SQL Server database connection string under the **ADO.NET** tab.  In the connection string, remove the listener port address including the 'comma' (**,1433**) before saving this string in a file.  If the **comma** and the port number are present in the connection string then application deployments will **fail**.  We will need the SQL Server db connection string in the next sections to configure the SQL Server database for the Claims API microservice.
 
-### B. Provision a Linux CentOS VM on Azure
-**Approx. time to complete this section: 45 Minutes**
 
-The following tools (binaries) will be installed on the Linux VM (~ Bastion Host).
-
-- Azure DevOps (VSTS) build agent (docker container). The build container will be used for running application and container builds.
-- Azure CLI 2.0 client.  Azure CLI will be used to administer and manage all Azure resources including the AKS cluster resources.
-- Git client.  The Git client will be used to clone this GitHub repository and then push source code changes to the forked repository.
-- .NET Core SDK.  This SDK will be used to build and test the microservice application locally. 
-- Kubernetes CLI (`kubectl`).  This CLI will be used for managing and introspecting the current state of resources deployed on the Kubernetes (AKS) cluster.
-- Helm CLI (`helm`).  Helm is a package manager for Kubernetes and will be used to manage and monitor the lifecyle of application deployments on AKS.
-- Istio CLI (`istioctl`).  [Istio](https://istio.io/docs/concepts/what-is-istio/) reduces complexity of managing microservice deployments by providing a uniform way to secure, connect, control and manage microservices.
-- Docker engine and client.  Docker engine will be used to run the Azure DevOps build agent. It will also be used to build and run the Claims API microservice container locally. 
-
-Follow the steps below to create the Bastion host (Linux VM) and install pre-requisite software on this VM.
 
 1.  Fork this [GitHub repository](https://github.com/tas-mac/aks-aspnet-sqldb-rest) to **your** GitHub account.
 
@@ -169,106 +144,7 @@ Follow the steps below to create the Bastion host (Linux VM) and install pre-req
 
     ![alt tag](./images/B-01.PNG)
 
-2.  Create a Linux CentOS VM (Bastion Host).
 
-    Open the [Azure Cloud Shell](https://shell.azure.com) in a separate browser tab and use the command below to create a **CentOS 7.5** VM on Azure.  Make sure you specify the correct **resource group** name and provide a value for the *password*.  Once the command completes, it will print the VM connection info. in the JSON message (response).  Save the **Public IP address**, **Login name** and **Password** info. in a file.  Alternatively, if you prefer you can use SSH based authentication to connect to the Linux VM.  The steps for creating and using an SSH key pair for Linux VMs in Azure is described [here](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/mac-create-ssh-keys).  You can then specify the location of the public key with the `--ssh-key-path` option to the `az vm create ...` command.
-
-    ```bash
-    $ az vm create --resource-group myResourceGroup --name k8s-lab --image OpenLogic:CentOS:7.5:latest --size Standard_B2s --data-disk-sizes-gb 128 --generate-ssh-keys --admin-username labuser --admin-password <password> --authentication-type password
-    ```
-
-3.  Login into the Linux VM via SSH.
-
-    On a Windows PC, you can use a SSH client such as [Putty](https://putty.org/), [Git Bash](https://gitforwindows.org/) or the [Windows Sub-System for Linux (Windows 10)](https://docs.microsoft.com/en-us/windows/wsl/install-win10) to login into the VM.
-
-    >**NOTE:** Use of Cloud Shell to SSH into the VM is **NOT** recommended.
-    ```bash
-    # SSH into the VM.  Substitute the public IP address for the Linux VM in the command below.
-    $ ssh labuser@x.x.x.x
-    #
-    ```
-
-4.  Format and mount a separate file system for docker storage.
-
-    Docker engine stores container instances (writeable layers), images, build caches and container logs in `/var/lib/docker` directory.  As container images are built and instances are spawned, this directory tends to fill up pretty quickly.  To avoid running out of space on the OS file system, we will format a new partition on an empty data disk (created during VM provisioning), write a file system in the new partition and then mount the file system onto the docker storage directory.
-    ```bash
-    #
-    # Partition the disk with fdisk
-    $ (echo n; echo p; echo 1; echo ; echo ; echo w) | sudo fdisk /dev/sdc
-    #
-    # Write a file system to the partition using 'mkfs' command
-    $ sudo mkfs -t xfs /dev/sdc1
-    #
-    # Mount the disk so it's accessible in the operation system
-    $ sudo mkdir -p /var/lib/docker && sudo mount /dev/sdc1 /var/lib/docker
-    #
-    # Verify the disk got mounted property.  The output should display filesystem '/dev/sdc1' mounted on directory
-    # '/var/lib/docker'
-    $ df -h
-    #
-    # To ensure the drive remains mounted after rebooting the VM, add it to the '/etc/fstab' file
-    #
-    # First determine the UUID of the drive '/dev/sdc1'.  The output of this command should list the UUID's of 
-    # of all drives on this system/VM.  Note down (Copy) the UUID of the '/dev/sdc1' drive.
-    $ sudo -i blkid
-    #
-    # Use 'vi' or 'nano' editor to update the '/etc/fstab' file.  You will need to use 'sudo'.  Add a line as follows.
-    # IMPORTANT : Substitute the UUID value of '/dev/sdc1' drive which you copied, output of previous command ('blkid').
-    UUID=33333333-3b3b-3c3c-3d3d-3e3e3e3e3e3e   /var/lib/docker  xfs    defaults,nofail   1  2
-    #
-    # Verify the content of '/etc/fstab/ file.  Make sure the drive '/dev/sdc1' is listed in the output
-    $ sudo cat /etc/fstab
-    #
-    ```
-
-5.  Install Git client and clone [this repository](https://github.com/ganrad/aks-aspnet-sqldb-rest).
-
-    When cloning the repository, make sure to use your Account ID in the GitHub URL.
-    ```bash
-    # Switch to home directory
-    $ cd
-    #
-    # Install Git client
-    $ sudo yum install -y git
-    #
-    # Check Git version number
-    $ git --version
-    #
-    # Create a new directory for GitHub repositories.
-    $ mkdir git-repos
-    #
-    # Change the working directory to 'git-repos'
-    $ cd git-repos
-    #
-    # Clone your GitHub repository into directory 'git-repos'.  Cloning this repo. will allow you to make changes to the application artifacts in the forked GitHub project.
-    # Substitute your GitHub Account ID in the URL.
-    $ git clone https://github.com/<YOUR-GITHUB-ACCOUNT>/aks-aspnet-sqldb-rest.git
-    #
-    # Switch to home directory
-    $ cd
-    #
-    ```
-
-6.  Install a command-line JSON processor.
-
-    Download [jq command line processor](https://stedolan.github.io/jq/) and install it on the VM.
-    ```bash
-    # Make sure you are in the home directory
-    $ cd
-    #
-    # Create a directory called 'jq'
-    $ mkdir jq
-    #
-    # Switch to the 'jq' directory
-    $ cd jq
-    #
-    # Download the 'jq' binary and save it in this directory
-    $ wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-    #
-    # Switch back to the home directory
-    $ cd
-    #
-    ```
 
 7.  Install Azure CLI and login into your Azure account.
     ```bash
@@ -383,7 +259,7 @@ Follow the steps below to create the Bastion host (Linux VM) and install pre-req
     $ docker info
     ```
 
-### C. Build and run the Claims API microservice locally on the Linux VM
+### C. Build and run the Claims API microservice locally 
 **Approx. time to complete this section: 1 hour**
 
 In this section, we will work on the following tasks
