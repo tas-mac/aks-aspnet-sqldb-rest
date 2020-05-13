@@ -82,7 +82,7 @@ In this section, we will work on the following tasks
 
     The API end-point should return a 200 OK HTTP status code and also return one claim record in the HTTP response body. 
     
-    5.  Build and run the Claims API with Docker for Linux containers.
+5.  Build and run the Claims API with Docker for Linux containers.
     ```bash
     # Run the docker build.
     # The build will take a few minutes to download both the .NET core build and run-time 
