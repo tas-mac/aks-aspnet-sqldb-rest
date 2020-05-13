@@ -89,8 +89,9 @@ Helm (https://helm.sh/docs/intro/install/) is a the deployment tool of choice fo
     $ helm version
     Client: &version.Version{SemVer:"v2.16.3", GitCommit:"e13bc94621d4ef666270cfbe734aaabf342a49bb", GitTreeState:"clean"}
     ```       
- 3. Use Helm to deploy the Claims API microservice container on AKS.
-
+ 4. Use Helm to deploy ngnix web server to your cluster https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm
+**** Pause  *****
+## Use Helm to deploy the Claims API microservice container on AKS
 A kubernetes Namespace is a container object used to group applications and their associated resources. We will be deploying the Claims API microservice container within the development namespace.Refer to the commands below.
 
     ```bash
@@ -110,7 +111,7 @@ A kubernetes Namespace is a container object used to group applications and thei
     #   - Enable/Set deployment type to 'blue'
     #     eg., --set blue.enabled=true
     # 
-    $ helm upgrade aks-aspnetcore-lab ./claims-api --install --namespace development --set blue.enabled=true --set image.repository=<your-acr-repo>.azurecr.io/claims-api --set sqldb.connectionString="Server=tcp:#{SQL_SRV_PREFIX}#.database.windows.net;Initial Catalog=ClaimsDB;Persist Security Info=False;User ID=#{SQL_USER_ID}#;Password=#{SQL_USER_PWD}#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    $ helm upgrade aks-aspnetcore-lab ./claims-api --install --namespace default --set blue.enabled=true --set image.repository=<your-acr-repo>.azurecr.io/claims-api --set sqldb.connectionString="Server=tcp:#{SQL_SRV_PREFIX}#.database.windows.net;Initial Catalog=ClaimsDB;Persist Security Info=False;User ID=#{SQL_USER_ID}#;Password=#{SQL_USER_PWD}#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
     #
     # List the Kubernetes namespaces.  Verify that the 'development' namespace got created.
     $ kubectl get namespaces
@@ -118,10 +119,11 @@ A kubernetes Namespace is a container object used to group applications and thei
     # List the application releases
     $ helm ls
     #
-    # List the pods in the 'development' namespace
+    # List the pods in the 'default' namespace
     $ kubectl get pods -n development
     #
     # Check the deployed Kubernetes service
-    $ kubectl get svc -n development
+    $ kubectl get svc -n default
     #
     ```
+5. You should see the service and the deployment available in the Kubernetes dashboard. If the health checks are passing then you should be able browser to the claims API.
