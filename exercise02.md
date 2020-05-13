@@ -23,15 +23,8 @@ In this section, we will work on the following tasks
 3.  Update the Azure SQL Server database connection string value in the **appsettings.json** file.
 
     The attribute **SqlServerDb** holds the database connection string and should point to the Azure SQL Server database instance which we provisioned in [Section A](#/exercise01).  You should have saved the SQL Server connection string value in a file.
-
-Refer to the comands below to edit the SQL Server database *Connection string*...
-    ```bash
-    # Switch to the source code directory.  This is the directory where you cloned this GitHub repository.
-    $ cd git-repos/aks-aspnet-sqldb-rest
-    #
-    ```
     
-    Edit the `appsettings.json` file using **vi** or **nano** editor and configure the SQL Server connection string value.  Replace the variable tokens and specify correct values for **SQL_SRV_PREFIX**, **SQL_USER_ID** and **SQL_USER_PWD** in the connection string.
+    Edit the `appsettings.json` file 
 
     Variable Token | Description
     -------------- | -----------
