@@ -54,7 +54,7 @@ Follow the steps below to provision the AKS cluster and deploy the Claims API mi
                 --attach-acr {repo name}.azurecr.io
        #
        # Verify status of AKS cluster
-       $ az aks show -g myResourceGroup -n akscluster --output table
+       $ az aks show -g myresourcegroup-xxxxxx -n akscluster --output table
        ```
 4. Log into Azure portal to verify that cluster was indeed created
 5. Using the dashboard follow the command to install the dashboard. You can also navigate to it from the cluster's main page as shown below  
