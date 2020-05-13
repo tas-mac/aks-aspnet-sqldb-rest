@@ -29,7 +29,7 @@ In this step, we will deploy an instance of Azure Container Registry (ACR) to st
     ```        
 6. Validate that you can pull image from the repo    
     ```bash
-    docker pull laims-api:latest
+    docker pull <registry name>.azurecr.io/claims-api
     ```     
    
 *** Done ****
